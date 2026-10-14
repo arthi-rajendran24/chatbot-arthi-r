@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f7f2" />
+    <meta name="description" content="Ask questions about a profile and see the source for every answer." />
+    <title>Profile companion</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#question">Skip to question</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Profile and conversation">
+        <a class="brand" href="/" aria-label="Profile companion home">
+          <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 18V6h6a4 4 0 0 1 0 8h-2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="18" r="1.5" fill="currentColor"/></svg></span>
+          <span>Profile<br /><strong>companion</strong></span>
+        </a>
+
+        <div class="source-block">
+          <p class="eyebrow">YOUR SOURCE</p>
+          <div class="document-art" aria-hidden="true">
+            <div class="paper-shape"><span class="paper-symbol">P</span><span class="paper-line long"></span><span class="paper-line"></span><span class="paper-line short"></span><span class="paper-divider"></span><span class="paper-line long"></span><span class="paper-line"></span><span class="paper-line short"></span><span class="paper-seal"><svg viewBox="0 0 20 20" fill="none"><path d="m5.5 10 3 3 6-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <span class="art-spark spark-one">+</span><span class="art-spark spark-two">+</span><span class="art-dot"></span>
+          </div>
+          <h2 id="profile-title">Your profile</h2>
+          <p class="filename" id="profile-filename">Loading source…</p>
+          <p class="source-meta" id="source-meta" hidden></p>
+          <span class="status-badge" id="source-status"><span class="status-dot" aria-hidden="true"></span><span id="source-status-label">Connecting</span></span>
+          <button class="source-button" id="preview-source" type="button" disabled><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 2.75h6.5L15 6.25v11H5v-14.5Z" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/><path d="M11 3v4h3.5M7.5 10h5M7.5 13h4" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/></svg>View profile<span aria-hidden="true">↗</span></button>
+        </div>
+
+        <button type="button" class="new-conversation" id="new-conversation"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>New conversation</button>
+        <div class="sidebar-note"><span class="small-lock" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><rect x="5.5" y="9" width="9" height="7" rx="1.8" stroke="currentColor" stroke-width="1.3"/><path d="M7.5 9V6.5a2.5 2.5 0 0 1 5 0V9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><p>This conversation stays in this browser tab. Your API key stays on the server.</p></div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <p>Answers from your profile. <span>Sources you can check.</span></p>
+          <span class="session-label"><span aria-hidden="true"></span>Local workspace</span>
+        </header>
+
+        <div class="workspace">
+          <section class="configuration-banner" id="configuration-banner" aria-labelledby="configuration-title" hidden>
+            <span class="banner-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M12.25 7.75a3.3 3.3 0 1 0-2.5 2.5L15 15.5l2-2-1.5-1.5-1 1-1.25-1.25 1-1-2-2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div><h2 id="configuration-title">One small step before we begin</h2><p>Add your Gemini API key to <code>GEMINI_API_KEY</code> in the local <code>.env</code> file, then refresh the connection.</p></div>
+            <button type="button" id="refresh-status">Refresh status</button>
+          </section>
+
+          <section class="service-banner" id="service-banner" role="status" hidden><p id="service-message"></p><button type="button" id="retry-status">Try again</button></section>
+
+          <div class="conversation-area" id="conversation-area">
+            <section class="welcome" id="welcome" aria-labelledby="welcome-title">
+              <div class="welcome-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="m16 4 2.8 8.4L27 16l-8.2 3.5L16 28l-3-8.5L5 16l8-3.6L16 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m26 3 1.1 3.3L30 7.5l-2.9 1.1L26 12l-1.1-3.4L22 7.5l2.9-1.2L26 3Z" fill="currentColor"/></svg></div>
+              <p class="eyebrow welcome-eyebrow">A CONVERSATION WITH YOUR PROFILE</p>
+              <h1 id="welcome-title">What would you<br />like to know?</h1>
+              <p class="welcome-description">Explore the experience, skills, and story in this profile.<br class="desktop-break" /> Every answer comes with a source you can open.</p>
+              <div class="suggestions" aria-label="Example questions">
+                <button class="suggestion" type="button" data-question="What work experience is listed in this profile?"><span class="suggestion-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><rect x="3" y="6" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M7 6V4.5A1.5 1.5 0 0 1 8.5 3h3A1.5 1.5 0 0 1 13 4.5V6M3 10.5c4.5 2 9.5 2 14 0M10 10v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><span><strong>Experience</strong><span>What is their career background?</span></span><span class="suggestion-arrow" aria-hidden="true">↗</span></button>
+                <button class="suggestion" type="button" data-question="What skills are listed in this profile?"><span class="suggestion-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m10 2 2.4 5.6L18 10l-5.6 2.4L10 18l-2.4-5.6L2 10l5.6-2.4L10 2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span><span><strong>Skills</strong><span>What skills do they bring?</span></span><span class="suggestion-arrow" aria-hidden="true">↗</span></button>
+                <button class="suggestion" type="button" data-question="What education is listed in this profile?"><span class="suggestion-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m2 7 8-4 8 4-8 4-8-4ZM5 8.5V13c3 2.7 7 2.7 10 0V8.5M18 7v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>Education</strong><span>Where did they study?</span></span><span class="suggestion-arrow" aria-hidden="true">↗</span></button>
+                <button class="suggestion" type="button" data-question="What contact information is provided in this profile?"><span class="suggestion-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><rect x="2.5" y="4.5" width="15" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="m3 5 7 6 7-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>Get in touch</strong><span>How can I contact them?</span></span><span class="suggestion-arrow" aria-hidden="true">↗</span></button>
+              </div>
+              <p class="welcome-note"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5.7" stroke="currentColor" stroke-width="1.1"/><path d="M8 7v4M8 4.7v.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Ask each question on its own for the most useful answer.</p>
+            </section>
+            <div class="messages" id="messages" role="log" aria-label="Conversation" aria-live="polite" aria-relevant="additions" hidden></div>
+          </div>
+
+          <div class="composer-section">
+            <p class="form-error" id="form-error" role="alert" hidden></p>
+            <form id="chat-form" class="composer" aria-label="Ask about the profile">
+              <label class="visually-hidden" for="question">Your question about the profile</label>
+              <textarea id="question" name="question" rows="1" maxlength="2000" placeholder="Ask something about this profile…" required disabled></textarea>
+              <button class="send-button" id="send-button" type="submit" aria-label="Send question" disabled><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 18V6M6.5 11.5 12 6l5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </form>
+            <div class="composer-caption"><p>Answers are quoted from the profile. Missing details stay unanswered.</p><span>Enter to send <span aria-hidden="true">↵</span></span></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <dialog class="profile-dialog" id="profile-dialog" aria-labelledby="dialog-title">
+      <div class="dialog-heading"><div><p class="eyebrow">THE ORIGINAL SOURCE</p><h2 id="dialog-title">Profile</h2><p id="dialog-filename"></p></div><button class="dialog-close" id="dialog-close" type="button" aria-label="Close profile"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>
+      <p class="dialog-note" id="dialog-note">The Markdown profile used to answer your questions.</p>
+      <div class="source-lines" id="source-lines" tabindex="0" aria-label="Profile source text"></div>
+    </dialog>
+  </body>
+</html>
